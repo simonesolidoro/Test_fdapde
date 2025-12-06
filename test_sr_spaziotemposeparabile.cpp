@@ -1,7 +1,8 @@
 #include <fdaPDE/models.h>
 using namespace fdapde;
 
-int main(){
+int main(int argc, char** argv){
+    int size_grid = std::stoi(argv[1]);
     // geometry
     Triangulation<1, 1> T = Triangulation<1, 1>::Interval(0, 2, 11);
     std::string mesh_path = "../fdaPDE-cpp/test/data/mesh/unit_square_21/";
@@ -26,11 +27,31 @@ int main(){
     auto F_T = integral(T)(u_T * w);
 
     SRPDE m("y ~ f", data, fe_ls_separable_mono(std::pair {a_D, F_D}, std::pair {a_T, F_T}));
-    m.fit(2.06143e-06, 2.06143e-06);
+    //m.fit(2.06143e-06, 2.06143e-06);
     
-    //EXPECT_TRUE(almost_equal<double>(m.f(), "../data/sr/06/field.mtx"));
-    for (auto& x: m.f()){
-        std::cout<<x<<std::endl;
+    //gcv
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic,Eigen::RowMajor> lambda_grid;
+    lambda_grid.resize(size_grid,2);
+
+    // grid da popolare con la griglia dei valori da esplorare
+    for(int i =0; i<lambda_grid.rows();++i){
+        lambda_grid(i,0) = std::pow(10, -6.0 + 0.25 * i) / data[0].rows();  
+        lambda_grid(i,1) = std::pow(10, -6.0 + 0.25 * i) / data[0].rows();  
     }
+    
+    GridSearch<2> optimizer;
+    auto start = std::chrono::high_resolution_clock::now();
+    optimizer.optimize(m.gcv(100, 476813), lambda_grid);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);  
+    std::cout<<duration.count()<<" ";
+
+
+
+    // verifica stessa soluzione 
+    //EXPECT_TRUE(almost_equal<double>(m.f(), "../data/sr/06/field.mtx"));
+    // for (auto& x: m.f()){
+    //     std::cout<<x<<std::endl;
+    // }
     return 0;
 }
