@@ -19,15 +19,19 @@ int main(){
     // modeling
     SRPDE m("y ~ f", data, fe_ls_elliptic(a, F));
     // calibration
-    std::vector<double> lambda_grid(13);
-    for (int i = 0; i < 13; ++i) { lambda_grid[i] = std::pow(10, -6.0 + 0.25 * i) / data[0].rows(); }
+    std::vector<double> lambda_grid(130);
+    for (int i = 0; i < 130; ++i) { lambda_grid[i] = std::pow(10, -6.0 + 0.25 * i) / data[0].rows(); }
     GridSearch<1> optimizer;
+    auto start = std::chrono::high_resolution_clock::now();
     optimizer.optimize(m.gcv(100, 476813), lambda_grid);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);  
+    std::cout<<duration.count()<<" ";
 
     std::cout<<"ottimo"<<optimizer.optimum()<<"value:"<<optimizer.value();
-    for (auto&  i : optimizer.values()){
-    	std::cout<<i<<std::endl;
-    }
+    // for (auto&  i : optimizer.values()){
+    // 	std::cout<<i<<std::endl;
+    // }
  
     // EXPECT_TRUE(almost_equal<double>(optimizer.values(), "fdaPDE-cpp/test/data/sr/04/gcvs.mtx"));
 }
