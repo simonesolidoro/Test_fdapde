@@ -1,0 +1,6 @@
+# Eseguibili senza estensione
+/*
+
+# Escludi solo i file senza punto nella root
+!*/
+!*.*
