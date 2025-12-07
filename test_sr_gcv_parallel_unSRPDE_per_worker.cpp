@@ -5,12 +5,12 @@ int main(int argc, char** argv){
     int granularity = std::stoi(argv[1]);
     int n_worker = std::stoi(argv[2]);
     // geometry
-    std::string mesh_path = "../fdaPDE-cpp/test/data/mesh/unit_square_21/";
+    std::string mesh_path = "../fdaPDE-cpp/test/data/mesh/unit_square_21/";// unit_square_60 in test 01
     Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
     // data
     GeoFrame data(D);
     auto& l1 = data.insert_scalar_layer<POINT>("l1", MESH_NODES);
-    l1.load_csv<double>("../fdaPDE-cpp/test/data/sr/04/response.csv");
+    l1.load_csv<double>("../fdaPDE-cpp/test/data/sr/04/response.csv"); //con 60 in test 01
     // physics
     FeSpace Vh(D, P1<1>);
     TrialFunction f(Vh);
@@ -21,8 +21,8 @@ int main(int argc, char** argv){
     // modeling
     //thread_local SRPDE m("y ~ f", data, fe_ls_elliptic(a, F));
     // calibration
-    std::vector<double> lambda_grid(130);
-    for (int i = 0; i < 130; ++i) { lambda_grid[i] = std::pow(10, -6.0 + 0.25 * i) / data[0].rows(); }
+    std::vector<double> lambda_grid(10);
+    for (int i = 0; i < 10; ++i) { lambda_grid[i] = std::pow(10, -6.0 + 0.25 * i) / data[0].rows(); }
     GridSearch<1> optimizer;
     //creo theradpool
     threadpool<steal::random> Tp(1000,n_worker);
