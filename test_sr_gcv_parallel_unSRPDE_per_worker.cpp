@@ -25,7 +25,7 @@ int main(int argc, char** argv){
     for (int i = 0; i < 10; ++i) { lambda_grid[i] = std::pow(10, -6.0 + 0.25 * i) / data[0].rows(); }
     GridSearch<1> optimizer;
     //creo theradpool
-    threadpool<steal::random> Tp(1000,n_worker);
+    threadpool Tp(1000,n_worker);
     auto obj = [&](Eigen::Matrix<double, 1, 1> lambda){
         thread_local SRPDE m("y ~ f", data, fe_ls_elliptic(a, F));//credo che la costruisce ogni thread la prima volta e poi ignorato se già costruito. Si messo cout in costruttore con id thread e ogni thread lo costruisce una volta sola. è orribile e sicuramente non corretto ma sembra funzionare
         return m.gcv(100, 476813).operator()(lambda);};

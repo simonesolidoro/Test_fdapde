@@ -42,7 +42,7 @@ int main(int argc, char** argv){
         lambda_grid(i,1) = 2.06143e-06;//std::pow(10, -6.0 + 0.25 * i) / data[0].rows();  
     }
     //std::cout<<data[0].rows();
-    threadpool<steal::random> Tp(1000,n_worker);
+    threadpool Tp(1000,n_worker);
     std::mutex m_;
     
     auto obj = [&](Eigen::Matrix<double, 2, 1> lambda){
