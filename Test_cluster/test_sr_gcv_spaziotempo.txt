@@ -1,0 +1,25 @@
+gcv_sr_spaziotempo thread_4 nlambda_4 gran_-1 thread: 133883750241984 ha costruito SRPDE
+thread: 133883741849280 ha costruito SRPDE
+thread: 133883758634688 ha costruito SRPDE
+thread: 133883767027392 ha costruito SRPDE
+14932445 
+gcv_sr_spaziotempo thread_4 nlambda_4 gran_-1 thread: 134852665931456 ha costruito SRPDE
+thread: 134852657538752 ha costruito SRPDE
+thread: 134852649146048 ha costruito SRPDE
+thread: 134852640753344 ha costruito SRPDE
+14385153 
+gcv_sr_spaziotempo thread_4 nlambda_4 gran_-1 thread: 137027863443136 ha costruito SRPDE
+thread: 137027846657728 ha costruito SRPDE
+thread: 137027838265024 ha costruito SRPDE
+thread: 137027855050432 ha costruito SRPDE
+13778139 
+gcv_sr_spaziotempo thread_4 nlambda_4 gran_-1 thread: 125982312752832 ha costruito SRPDE
+thread: 125982295967424 ha costruito SRPDE
+thread: 125982304360128 ha costruito SRPDE
+thread: 125982321145536 ha costruito SRPDE
+13857537 
+gcv_sr_spaziotempo thread_4 nlambda_4 gran_-1 thread: 125348047996608 ha costruito SRPDE
+thread: 125348073174720 ha costruito SRPDE
+thread: 125348064782016 ha costruito SRPDE
+thread: 125348056389312 ha costruito SRPDE
+16444916 

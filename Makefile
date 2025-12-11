@@ -1,5 +1,5 @@
 CXX = g++-14 # Compilatore C++
-CXXFLAGS = -I/home/simo/fdaPDE-cpp -I/home/simo/fdaPDE-cpp/fdaPDE/core -I/home/simo/eigen-3.4.0 -O2 -march=native -std=c++20 -s 
+CXXFLAGS = -I./../../fdaPDE-cpp -I./../../fdaPDE-cpp/fdaPDE/core -I/home/simo/eigen-3.4.0 -O2 -march=native -std=c++20 -s 
 SOURCES = $(wildcard test_*.cpp) 
 EXECUTABLES = $(SOURCES:.cpp=) 
 

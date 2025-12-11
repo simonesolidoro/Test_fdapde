@@ -7,12 +7,12 @@ int main(int argc, char** argv){
     int granularity = std::stoi(argv[2]);
     // geometry
     Triangulation<1, 1> T = Triangulation<1, 1>::Interval(0, 2, 11);
-    std::string mesh_path = "../fdaPDE-cpp/test/data/mesh/unit_square_21/";
+    std::string mesh_path = "../test/data/mesh/unit_square_21/";
     Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
     // data
     GeoFrame data(D, T);
     auto& l1 = data.insert_scalar_layer<POINT, POINT>("l1", std::pair {MESH_NODES, MESH_NODES});
-    l1.load_csv<double>("../fdaPDE-cpp/test/data/sr/06/response.csv");
+    l1.load_csv<double>("../test/data/sr/06/response.csv");
     //physics
     FeSpace Vh(D, P1<1>);   // linear finite element in space
     TrialFunction f(Vh);
@@ -46,38 +46,12 @@ int main(int argc, char** argv){
     std::mutex m_;
     
     auto obj = [&](Eigen::Matrix<double, 2, 1> lambda){
-    //     //ricreando tutto niente crash, ricreando solo a_D,F_D,a_T,F_T crash. problema forse in costruttore di fe_ls_separable_mono perché in solo spazio fe_ls_eliptic non crasha
-    // // geometry
-    // Triangulation<1, 1> T = Triangulation<1, 1>::Interval(0, 2, 11);
-    // std::string mesh_path = "../fdaPDE-cpp/test/data/mesh/unit_square_21/";
-    // Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
-    // // data
-    // GeoFrame data(D, T);
-    // auto& l1 = data.insert_scalar_layer<POINT, POINT>("l1", std::pair {MESH_NODES, MESH_NODES});
-    // l1.load_csv<double>("../fdaPDE-cpp/test/data/sr/06/response.csv");
-    // // physics
-    // FeSpace Vh(D, P1<1>);   // linear finite element in space
-    // TrialFunction f(Vh);
-    // TestFunction  v(Vh);
-    // auto a_D = integral(D)(dot(grad(f), grad(v)));
-    // ZeroField<2> u_D;
-    // auto F_D = integral(D)(u_D * v);
-
-    // BsSpace Bh(T, 3);   // cubic B-splines in time
-    // TrialFunction g(Bh);
-    // TestFunction  w(Bh);
-    // auto a_T = integral(T)(dxx(g) * dxx(w));
-    // ZeroField<1> u_T;
-    // auto F_T = integral(T)(u_T * w);
-        std::cout<<"thread: "<<std::this_thread::get_id()<<" inzia obj"<<std::endl;
-        
-            std::unique_lock<std::mutex> loc(m_);
-            thread_local SRPDE m("y ~ f", data, fe_ls_separable_mono(std::pair {a_D, F_D}, std::pair {a_T, F_T}));    
-            loc.unlock();
-    
-        std::cout<<"thread: "<<std::this_thread::get_id()<<" ha creato SRPDE"<<std::endl;
-        return m.gcv(100, 476813).operator()(lambda);};
-    
+    //     //ricreando tutto niente crash, ricreando solo a_D,F_D,a_T,F_T crash. problema forse in costruttore di fe_ls_separable_mono perché in solo spazio fe_ls_eliptic non crasha    
+        std::unique_lock<std::mutex> loc(m_);
+        thread_local SRPDE m("y ~ f", data, fe_ls_separable_mono(std::pair {a_D, F_D}, std::pair {a_T, F_T}));    
+        loc.unlock();
+        return m.gcv(100, 476813).operator()(lambda);
+    };
     GridSearch<2> optimizer;
     auto start = std::chrono::high_resolution_clock::now();
     optimizer.optimize(obj, lambda_grid, execution::par,Tp,granularity);

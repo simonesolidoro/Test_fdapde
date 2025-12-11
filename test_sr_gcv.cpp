@@ -3,12 +3,12 @@ using namespace fdapde;
 
 int main(){
     // geometry
-    std::string mesh_path = "../fdaPDE-cpp/test/data/mesh/unit_square_21/";
+    std::string mesh_path = "../test/data/mesh/unit_square_21/";
     Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
     // data
     GeoFrame data(D);
     auto& l1 = data.insert_scalar_layer<POINT>("l1", MESH_NODES);
-    l1.load_csv<double>("../fdaPDE-cpp/test/data/sr/04/response.csv");
+    l1.load_csv<double>("../test/data/sr/04/response.csv");
     // physics
     FeSpace Vh(D, P1<1>);
     TrialFunction f(Vh);

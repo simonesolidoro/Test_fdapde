@@ -5,12 +5,12 @@ int main(int argc, char** argv){
     int size_grid = std::stoi(argv[1]);
     // geometry
     Triangulation<1, 1> T = Triangulation<1, 1>::Interval(0, 2, 11);
-    std::string mesh_path = "../fdaPDE-cpp/test/data/mesh/unit_square_21/";
+    std::string mesh_path = "../test/data/mesh/unit_square_21/";
     Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
     // data
     GeoFrame data(D, T);
     auto& l1 = data.insert_scalar_layer<POINT, POINT>("l1", std::pair {MESH_NODES, MESH_NODES});
-    l1.load_csv<double>("../fdaPDE-cpp/test/data/sr/06/response.csv");
+    l1.load_csv<double>("../test/data/sr/06/response.csv");
     // physics
     FeSpace Vh(D, P1<1>);   // linear finite element in space
     TrialFunction f(Vh);
