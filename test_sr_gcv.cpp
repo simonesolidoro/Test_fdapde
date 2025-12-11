@@ -28,10 +28,12 @@ int main(){
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);  
     std::cout<<duration.count()<<" ";
 
-    std::cout<<"ottimo"<<optimizer.optimum()<<"value:"<<optimizer.value();
+    std::cout<<"ottimo"<<optimizer.optimum()<<"value:"<<optimizer.value()<<std::endl;
     // for (auto&  i : optimizer.values()){
     // 	std::cout<<i<<std::endl;
     // }
  
     // EXPECT_TRUE(almost_equal<double>(optimizer.values(), "fdaPDE-cpp/test/data/sr/04/gcvs.mtx"));
 }
+
+// 130 lambda sol: ottimo1.27515e-08value:0.0389251

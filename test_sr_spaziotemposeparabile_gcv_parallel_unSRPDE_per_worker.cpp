@@ -38,8 +38,8 @@ int main(int argc, char** argv){
 
     // grid da popolare con la griglia dei valori da esplorare
     for(int i =0; i<size_grid;++i){
-        lambda_grid(i,0) = 2.06143e-06;//std::pow(10, -6.0 + 0.25 * i) / data[0].rows();  
-        lambda_grid(i,1) = 2.06143e-06;//std::pow(10, -6.0 + 0.25 * i) / data[0].rows();  
+        lambda_grid(i,0) = std::pow(10, -6.0 + 0.25 * i) / data[0].rows();  
+        lambda_grid(i,1) = std::pow(10, -6.0 + 0.25 * i) / data[0].rows();  
     }
     //std::cout<<data[0].rows();
     threadpool Tp(1000,n_worker);
@@ -68,3 +68,8 @@ int main(int argc, char** argv){
     // }
     return 0;
 }
+
+// 16 lambda: ./test_sr_spaziotemposeparabile_gcv_parallel_unSRPDE_per_worker 16 2 4
+            // 51779308 ottimo1.15923e-06 1.15923e-06value:0.01326
+// 4 lambda: ./test_sr_spaziotemposeparabile_gcv_parallel_unSRPDE_per_worker 4 -1 1
+            // 34675035 ottimo1.15923e-09 1.15923e-09value:0.027419

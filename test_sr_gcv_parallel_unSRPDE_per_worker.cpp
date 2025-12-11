@@ -2,6 +2,7 @@
 using namespace fdapde;
 
 int main(int argc, char** argv){
+    if(argc < 2){std::cerr<<"in input: granularity n_worker \n";}
     int granularity = std::stoi(argv[1]);
     int n_worker = std::stoi(argv[2]);
     // geometry
@@ -21,8 +22,8 @@ int main(int argc, char** argv){
     // modeling
     //thread_local SRPDE m("y ~ f", data, fe_ls_elliptic(a, F));
     // calibration
-    std::vector<double> lambda_grid(10);
-    for (int i = 0; i < 10; ++i) { lambda_grid[i] = std::pow(10, -6.0 + 0.25 * i) / data[0].rows(); }
+    std::vector<double> lambda_grid(130);
+    for (int i = 0; i < 130; ++i) { lambda_grid[i] = std::pow(10, -6.0 + 0.25 * i) / data[0].rows(); }
     GridSearch<1> optimizer;
     //creo theradpool
     threadpool Tp(1000,n_worker);
@@ -39,9 +40,6 @@ int main(int argc, char** argv){
     
 
     std::cout<<"ottimo"<<optimizer.optimum()<<"value:"<<optimizer.value();
-    for (auto&  i : optimizer.values()){
-    	std::cout<<i<<std::endl;
-    }
  
     // EXPECT_TRUE(almost_equal<double>(optimizer.values(), "fdaPDE-cpp/test/data/sr/04/gcvs.mtx"));
 }

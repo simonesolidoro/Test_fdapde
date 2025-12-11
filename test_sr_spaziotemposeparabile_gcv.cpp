@@ -55,3 +55,6 @@ int main(int argc, char** argv){
     // }
     return 0;
 }
+
+// 4 lambda (size_grid = 4) sol: tempo=39989362 sol=ottimo 1.15923e-09 1.15923e-09 value:0.027419
+// 16 lambda sol: tempo 129077993 ; ottimo1.15923e-06 1.15923e-06; value 0.01326
