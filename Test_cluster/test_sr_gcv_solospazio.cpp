@@ -10,12 +10,12 @@ int main(int argc, char** argv){
         std::cout<<"gcv_sr_solospazio sequential nlambda_"<<n_lambda<<" gran ";
         for(int run = 0; run < runs; run ++){
             // geometry
-            std::string mesh_path = "../../fdaPDE-cpp/test/data/mesh/unit_square_21/";
+            std::string mesh_path = "../../test/data/mesh/unit_square_21/";
             Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
             // data
             GeoFrame data(D);
             auto& l1 = data.insert_scalar_layer<POINT>("l1", MESH_NODES);
-            l1.load_csv<double>("../../fdaPDE-cpp/test/data/sr/04/response.csv");
+            l1.load_csv<double>("../../test/data/sr/04/response.csv");
             // physics
             FeSpace Vh(D, P1<1>);
             TrialFunction f(Vh);
@@ -47,12 +47,12 @@ int main(int argc, char** argv){
     std::cout<<"gcv_sr_solospazio thread_"<<n_worker<<" nlambda_"<<n_lambda<<" gran_"<<granularity<<" ";
     for (int run=0; run<runs; run ++){
         // geometry
-        std::string mesh_path = "../../fdaPDE-cpp/test/data/mesh/unit_square_21/";
+        std::string mesh_path = "../../test/data/mesh/unit_square_21/";
         Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
         // data
         GeoFrame data(D);
         auto& l1 = data.insert_scalar_layer<POINT>("l1", MESH_NODES);
-        l1.load_csv<double>("../../fdaPDE-cpp/test/data/sr/04/response.csv");
+        l1.load_csv<double>("../../test/data/sr/04/response.csv");
         // physics
         FeSpace Vh(D, P1<1>);
         TrialFunction f(Vh);
@@ -67,7 +67,7 @@ int main(int argc, char** argv){
         for (int i = 0; i < n_lambda; ++i) { lambda_grid[i] = std::pow(10, -6.0 + 0.25 * i) / data[0].rows(); }
         GridSearch<1> optimizer;
         //creo theradpool
-        threadpool<steal::random> Tp(1000,n_worker);
+        threadpool Tp(1000,n_worker);
         auto obj = [&](Eigen::Matrix<double, 1, 1> lambda){
             thread_local SRPDE m("y ~ f", data, fe_ls_elliptic(a, F));//credo che la costruisce ogni thread la prima volta e poi ignorato se già costruito. Si messo cout in costruttore con id thread e ogni thread lo costruisce una volta sola. è orribile e sicuramente non corretto ma sembra funzionare
             return m.gcv(100, 476813).operator()(lambda);};

@@ -12,12 +12,12 @@ int main(int argc, char** argv){
         for(int run = 0; run < runs; run ++){
             // geometry
             Triangulation<1, 1> T = Triangulation<1, 1>::Interval(0, 2, 11);
-            std::string mesh_path = "../../fdaPDE-cpp/test/data/mesh/unit_square_21/";
+            std::string mesh_path = "../../test/data/mesh/unit_square_21/";
             Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
             // data
             GeoFrame data(D, T);
             auto& l1 = data.insert_scalar_layer<POINT, POINT>("l1", std::pair {MESH_NODES, MESH_NODES});
-            l1.load_csv<double>("../../fdaPDE-cpp/test/data/sr/06/response.csv");
+            l1.load_csv<double>("../../test/data/sr/06/response.csv");
             // physics
             FeSpace Vh(D, P1<1>);   // linear finite element in space
             TrialFunction f(Vh);
@@ -60,12 +60,12 @@ int main(int argc, char** argv){
     for (int run=0; run<runs; run ++){
         // geometry
         Triangulation<1, 1> T = Triangulation<1, 1>::Interval(0, 2, 11);
-        std::string mesh_path = "../../fdaPDE-cpp/test/data/mesh/unit_square_21/";
+        std::string mesh_path = "../../test/data/mesh/unit_square_21/";
         Triangulation<2, 2> D(mesh_path + "points.csv", mesh_path + "elements.csv", mesh_path + "boundary.csv", true, true);
         // data
         GeoFrame data(D, T);
         auto& l1 = data.insert_scalar_layer<POINT, POINT>("l1", std::pair {MESH_NODES, MESH_NODES});
-        l1.load_csv<double>("../../fdaPDE-cpp/test/data/sr/06/response.csv");
+        l1.load_csv<double>("../../test/data/sr/06/response.csv");
         // physics
         FeSpace Vh(D, P1<1>);   // linear finite element in space
         TrialFunction f(Vh);
@@ -91,11 +91,14 @@ int main(int argc, char** argv){
             lambda_grid(i,1) = std::pow(10, -6.0 + 0.25 * i) / data[0].rows();  
         }
         
-        threadpool<steal::random> Tp(1000,n_worker);
+        threadpool Tp(1000,n_worker);
+        std::mutex m;
         auto obj = [&](Eigen::Matrix<double, 2, 1> lambda){
+            std::unique_lock<std::mutex> loc(m);
             thread_local SRPDE m("y ~ f", data, fe_ls_separable_mono(std::pair {a_D, F_D}, std::pair {a_T, F_T}));
-            std::cout<<"thread: "<<std::this_thread::get_id()<<" ha costruito SRPDE"<<std::endl;
-            return m.gcv(100, 476813).operator()(lambda);};
+            loc.unlock();
+            return m.gcv(100, 476813).operator()(lambda);
+        };
         
         GridSearch<2> optimizer;
         auto start = std::chrono::high_resolution_clock::now();
